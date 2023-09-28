@@ -1,19 +1,27 @@
 package com.example.privatebibleapp.dataBooks.cache
 
+import com.example.privatebibleapp.dataBooks.BookData
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+
 interface BooksCacheDataSource {
+    suspend fun read(): List<BookDb>
+    suspend fun save(booksData: List<BookData>)
 
-    fun fetchBooks() : List<BookCache>
+    class Base(
+        private val booksDao: BooksDao,
+        private val bookDataToDbMapper: BookDataToDbMapper
+    ) : BooksCacheDataSource {
 
-    fun mapToDb()
 
-    class Base() : BooksCacheDataSource{
-        override fun fetchBooks(): List<BookCache> {
-            TODO("Not yet implemented")
+        private val mutex = Mutex()
+        override suspend fun read(): List<BookDb> = mutex.withLock { booksDao.fetchAllBooks() }
+
+
+        override suspend fun save(booksData: List<BookData>) = mutex.withLock {
+            val listBookDb = booksData.map { bookData -> bookData.mapToDb(bookDataToDbMapper) }
+            booksDao.insertAllBooks(listBookDb)
         }
-
-        override fun mapToDb() {
-            TODO("Not yet implemented")
-        }
-
     }
+
 }

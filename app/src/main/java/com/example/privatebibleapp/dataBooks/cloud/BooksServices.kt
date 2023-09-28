@@ -1,9 +1,10 @@
 package com.example.privatebibleapp.dataBooks.cloud
 
+import okhttp3.ResponseBody
 import retrofit2.http.GET
 
 interface BooksServices {
 
     @GET("books")
-    fun fetchBooks() : List<BookCloud>
+    suspend fun fetchBooks(): ResponseBody
 }

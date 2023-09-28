@@ -1,6 +1,8 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'realm-android'
 
 }
 
@@ -43,6 +45,9 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
+    //lifecycle
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1"
+
 
     //Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
@@ -52,4 +57,12 @@ dependencies {
 
     //HttpInterceptor
     implementation 'com.squareup.okhttp3:logging-interceptor:4.9.1'
+
+    //Coroutines
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
+
+    // Room
+    def room_version = "2.5.0"
+    implementation "androidx.room:room-ktx:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
 }
