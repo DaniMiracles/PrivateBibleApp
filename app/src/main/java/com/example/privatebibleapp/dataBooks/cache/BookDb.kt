@@ -12,15 +12,15 @@ import com.example.privatebibleapp.dataBooks.BookData
 import com.example.privatebibleapp.dataBooks.ToBookDataMapper
 
 
-
 @Entity(tableName = "bible_table")
 data class BookDb(
     @PrimaryKey
     @ColumnInfo(name = "id")
     val id: Int,
-    @ColumnInfo(name = "name") val name: String
+    @ColumnInfo(name = "name") val name: String,
+    @ColumnInfo(name = "testament") val testament: String
 ) : Abstract.Object<BookData, ToBookDataMapper> {
-    override fun map(mapper: ToBookDataMapper): BookData = mapper.map(id, name)
+    override fun map(mapper: ToBookDataMapper): BookData = mapper.map(id, name, testament)
 
 }
 
@@ -30,7 +30,7 @@ interface BooksDao {
     @Query("SELECT * FROM bible_table ORDER BY id ASC")
     fun fetchAllBooks(): List<BookDb>
 
-   @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAllBooks(list: List<BookDb>)
 }
 

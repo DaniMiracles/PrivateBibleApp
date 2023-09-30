@@ -6,4 +6,6 @@
     <string name="name_book">name_book</string>
     <string name="error">error</string>
     <string name="retry_again">retry again</string>
+    <string name="new_testament">New Testament</string>
+    <string name="old_testament">Old Testament</string>
 </resources>

@@ -17,7 +17,9 @@ class BibleAdapter(private val retry: BibleViewHolder.Retry) :
     override fun getItemViewType(position: Int): Int = when (books[position]) {
         is BookUi.Base -> 0
         is BookUi.Fail -> 1
-        is BookUi.Progress -> 2
+        is BookUi.Testament -> 2
+        is BookUi.Progress -> 3
+        else -> -1
     }
 
     fun update(newBooks: List<BookUi>) {
@@ -29,14 +31,21 @@ class BibleAdapter(private val retry: BibleViewHolder.Retry) :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BibleViewHolder {
         val viewHolder = when (viewType) {
             0 -> BibleViewHolder.Base(
-                LayoutInflater.from(parent.context).inflate(R.layout.bible_books, parent,false)
+                LayoutInflater.from(parent.context).inflate(R.layout.bible_books, parent, false)
             )
+
             1 -> BibleViewHolder.Fail(
-                LayoutInflater.from(parent.context).inflate(R.layout.books_require_error, parent,false),
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.books_require_error, parent, false),
                 retry
             )
+
+            2 -> BibleViewHolder.Base(
+                LayoutInflater.from(parent.context).inflate(R.layout.testament, parent, false)
+            )
+
             else -> BibleViewHolder.FullscreenProgress(
-                LayoutInflater.from(parent.context).inflate(R.layout.progress, parent,false)
+                LayoutInflater.from(parent.context).inflate(R.layout.progress, parent, false)
             )
         }
         return viewHolder
@@ -49,7 +58,7 @@ class BibleAdapter(private val retry: BibleViewHolder.Retry) :
     override fun getItemCount(): Int = books.size
 }
 
-abstract class BibleViewHolder(view: View) :RecyclerView.ViewHolder(view) {
+abstract class BibleViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     open fun bind(bookUi: BookUi) {}
 

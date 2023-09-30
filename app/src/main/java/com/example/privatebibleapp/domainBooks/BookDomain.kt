@@ -4,10 +4,23 @@ import com.example.privatebibleapp.core.Abstract
 import com.example.privatebibleapp.presenterBooks.BookDomainToUiMapper
 import com.example.privatebibleapp.presenterBooks.BookUi
 
-class BookDomain(private val id: Int, private val name: String) :
-    Abstract.Object<BookUi, BookDomainToUiMapper> {
 
-    override fun map(mapper: BookDomainToUiMapper): BookUi =
-        mapper.map(id, name)
+sealed class BookDomain : Abstract.Object<BookUi, BookDomainToUiMapper> {
+    class Base(private val id: Int, private val name: String) : BookDomain() {
+        override fun map(mapper: BookDomainToUiMapper): BookUi =
+            mapper.map(id, name)
+    }
 
+    class Testament(private val type: TypeTestament) : BookDomain() {
+        override fun map(mapper: BookDomainToUiMapper): BookUi = mapper.map(type.getId(), type.name)
+
+    }
+}
+
+
+enum class TypeTestament(private val id: Int) {
+    NEW(Int.MIN_VALUE),
+    OLD(Int.MAX_VALUE);
+
+    fun getId() = id
 }
