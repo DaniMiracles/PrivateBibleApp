@@ -24,7 +24,13 @@ class MainActivity : AppCompatActivity() {
             override fun tryAgain() {
                 booksViewModel.fetchBooks()
             }
-        })
+        },
+            object : CollapseListener{
+                override fun collapseOrExpand(id: Int) {
+                    booksViewModel.collapseOrExpand(id)
+                }
+
+            })
 
         booksRecyclerView.adapter = booksAdapter
         booksRecyclerView.addItemDecoration(dividerItemDecoration)

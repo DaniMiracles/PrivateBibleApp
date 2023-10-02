@@ -1,19 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cardViewNameBook"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
+    android:background="@color/purple_200"
     android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/nameBook"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="3dp"
-        android:paddingRight="8dp"
+        android:padding="8dp"
         android:gravity="end"
-        android:background="@color/purple_200"
         android:text="@string/name_book"
         android:textColor="@color/white"
         android:textSize="20sp" />
 
-</androidx.cardview.widget.CardView>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/expand_more_px"
+        android:id="@+id/collapseView"
+        android:layout_gravity="center"
+        app:tint="@color/white" />
+
+
+</LinearLayout>

@@ -3,6 +3,7 @@ package com.example.privatebibleapp.core
 import android.app.Application
 import com.example.privatebibleapp.BooksCommunication
 import com.example.privatebibleapp.BooksViewModel
+import com.example.privatebibleapp.UiDataCache
 import com.example.privatebibleapp.dataBooks.BookRepository
 import com.example.privatebibleapp.dataBooks.BooksDataToDomainMapper
 import com.example.privatebibleapp.dataBooks.ToBookDataMapper
@@ -75,7 +76,8 @@ class BibleApp : Application() {
         booksViewModel = BooksViewModel(
             booksInteractor,
             BooksDomainToUiMapper.Base(manageResources, BookDomainToUiMapper.Base(manageResources)),
-            booksCommunication
+            booksCommunication,
+            UiDataCache.Base()
         )
 
 

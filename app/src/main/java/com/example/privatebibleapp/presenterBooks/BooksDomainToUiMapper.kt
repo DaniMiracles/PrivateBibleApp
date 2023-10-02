@@ -16,8 +16,8 @@ interface BooksDomainToUiMapper : Abstract.Mapper {
     ) : BooksDomainToUiMapper {
 
         override fun map(listBookDomain: List<BookDomain>): BooksUi =
-            BooksUi.Success(listBookDomain, bookDomainToUiMapper)
-
+            BooksUi.Success(listBookDomain.map {
+                    bookDomain -> bookDomain.map(bookDomainToUiMapper) })
 
         override fun map(errorType: ErrorType): BooksUi = BooksUi.Fail(errorType, manageResources)
     }

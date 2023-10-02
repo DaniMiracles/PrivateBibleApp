@@ -4,12 +4,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.privatebibleapp.presenterBooks.BookUi
+import com.example.privatebibleapp.presenterBooks.CollapseMapper
 import com.example.privatebibleapp.presenterBooks.StringMapper
 
-class BibleAdapter(private val retry: BibleViewHolder.Retry) :
+class BibleAdapter(
+    private val retry: BibleViewHolder.Retry,
+    private val collapseListener: CollapseListener
+) :
     RecyclerView.Adapter<BibleViewHolder>() {
 
     private val books = ArrayList<BookUi>()
@@ -28,28 +33,14 @@ class BibleAdapter(private val retry: BibleViewHolder.Retry) :
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BibleViewHolder {
-        val viewHolder = when (viewType) {
-            0 -> BibleViewHolder.Base(
-                LayoutInflater.from(parent.context).inflate(R.layout.bible_books, parent, false)
-            )
-
-            1 -> BibleViewHolder.Fail(
-                LayoutInflater.from(parent.context)
-                    .inflate(R.layout.books_require_error, parent, false),
-                retry
-            )
-
-            2 -> BibleViewHolder.Base(
-                LayoutInflater.from(parent.context).inflate(R.layout.testament, parent, false)
-            )
-
-            else -> BibleViewHolder.FullscreenProgress(
-                LayoutInflater.from(parent.context).inflate(R.layout.progress, parent, false)
-            )
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BibleViewHolder =
+        when (viewType) {
+            0 -> BibleViewHolder.Base(R.layout.bible_books.makeView(parent))
+            1 -> BibleViewHolder.Fail(R.layout.books_require_error.makeView(parent), retry)
+            2 -> BibleViewHolder.Testament(R.layout.testament.makeView(parent), collapseListener)
+            else -> BibleViewHolder.FullscreenProgress(R.layout.progress.makeView(parent))
         }
-        return viewHolder
-    }
+
 
     override fun onBindViewHolder(holder: BibleViewHolder, position: Int) {
         holder.bind(books[position])
@@ -64,7 +55,7 @@ abstract class BibleViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     class FullscreenProgress(view: View) : BibleViewHolder(view)
 
-    class Base(view: View) : BibleViewHolder(view) {
+    abstract class Info(view: View) : BibleViewHolder(view) {
         private val name = view.findViewById<TextView>(R.id.nameBook)
         override fun bind(bookUi: BookUi) {
             bookUi.map(object : StringMapper {
@@ -73,7 +64,30 @@ abstract class BibleViewHolder(view: View) : RecyclerView.ViewHolder(view) {
                 }
             })
         }
+    }
 
+    class Base(view: View) : Info(view)
+
+    class Testament(view: View, private val collapseListener: CollapseListener) : Info(view) {
+        override fun bind(bookUi: BookUi) {
+            super.bind(bookUi)
+            val collapseView = itemView.findViewById<ImageView>(R.id.collapseView)
+
+            itemView.setOnClickListener {
+                bookUi.collapseOrExpand(collapseListener)
+            }
+            bookUi.showCollapsed(object : CollapseMapper {
+                override fun show(collapsed: Boolean) {
+                    val iconId = if (collapsed) {
+                        R.drawable.expand_more_px
+                    } else {
+                        R.drawable.expand_less_px
+                    }
+                    collapseView.setImageResource(iconId)
+                }
+
+            })
+        }
     }
 
     class Fail(view: View, private val retry: Retry) : BibleViewHolder(view) {
@@ -96,3 +110,5 @@ abstract class BibleViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     }
 }
 
+private fun Int.makeView(parent: ViewGroup): View =
+    LayoutInflater.from(parent.context).inflate(this, parent, false)
