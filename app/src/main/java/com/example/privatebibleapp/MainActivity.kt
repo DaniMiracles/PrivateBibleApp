@@ -9,6 +9,7 @@ import com.example.privatebibleapp.core.BibleApp
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var booksViewModel : BooksViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -17,7 +18,7 @@ class MainActivity : AppCompatActivity() {
 
 
         val booksRecyclerView = findViewById<RecyclerView>(R.id.booksRecyclerView)
-        val booksViewModel = (application as BibleApp).booksViewModel
+        booksViewModel = (application as BibleApp).booksViewModel
         val dividerItemDecoration = DividerItemDecoration(this,RecyclerView.VERTICAL)
 
         val booksAdapter = BibleAdapter(object : BibleViewHolder.Retry {
@@ -40,5 +41,10 @@ class MainActivity : AppCompatActivity() {
 
         booksViewModel.fetchBooks()
 
+    }
+
+    override fun onPause() {
+        super.onPause()
+        booksViewModel.saveCollapsedStates()
     }
 }

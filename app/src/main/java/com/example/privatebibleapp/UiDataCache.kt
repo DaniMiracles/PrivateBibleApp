@@ -1,20 +1,27 @@
 package com.example.privatebibleapp
 
 import com.example.privatebibleapp.presenterBooks.BookUi
+import com.example.privatebibleapp.presenterBooks.BooksUi
 
 interface UiDataCache {
 
-    fun cache(list: List<BookUi>)
-    fun changeState(id : Int) : List<BookUi>
+    fun cache(list: List<BookUi>) : BooksUi
+    fun changeState(id: Int): List<BookUi>
+    fun saveState()
 
-
-    class Base() : UiDataCache{
+    class Base(private val cacheId: IdCache) : UiDataCache {
         private val cachedList = ArrayList<BookUi>()
 
 
-        override fun cache(list: List<BookUi>)  {
+        override fun cache(list: List<BookUi>) : BooksUi {
             cachedList.clear()
             cachedList.addAll(list)
+            var newList: List<BookUi> = ArrayList(list)
+            val ids = cacheId.read()
+            ids.forEach { id ->
+                newList = changeState(id)
+            }
+            return BooksUi.Success(newList)
         }
 
         override fun changeState(id: Int): List<BookUi> {
@@ -41,6 +48,16 @@ interface UiDataCache {
                 }
             }
             return newList
+        }
+
+        override fun saveState() {
+            cacheId.start()
+            cachedList.filter {bookUi ->
+                bookUi.isCollapsed()
+            }.forEach {bookUi ->
+                bookUi.saveId(cacheId)
+            }
+            cacheId.finish()
         }
 
 

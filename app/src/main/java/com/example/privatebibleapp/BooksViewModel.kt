@@ -28,9 +28,9 @@ class BooksViewModel(
             try {
                 val resultDomain = booksInteractor.fetchBooks()
                 val resultUi = resultDomain.map(booksDomainToUiMapper)
-                (resultUi as BooksUi.Success).cache(uiDataCache)
+               val actual = (resultUi as BooksUi.Success).cache(uiDataCache)
                 withContext(Dispatchers.Main) {
-                    resultUi.map(booksCommunication)
+                    actual.map(booksCommunication)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -45,4 +45,6 @@ class BooksViewModel(
     fun collapseOrExpand(id: Int) {
         booksCommunication.map(uiDataCache.changeState(id))
     }
+
+    fun saveCollapsedStates() = uiDataCache.saveState()
 }
