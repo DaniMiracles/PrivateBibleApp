@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.privatebibleapp.presenterBooks.BookUi
 import com.example.privatebibleapp.presenterBooks.CollapseMapper
@@ -28,9 +29,11 @@ class BibleAdapter(
     }
 
     fun update(newBooks: List<BookUi>) {
+        val diffUtilCallback = DiffUtilCallback(books, newBooks)
+        val result = DiffUtil.calculateDiff(diffUtilCallback)
         books.clear()
         books.addAll(newBooks)
-        notifyDataSetChanged()
+        result.dispatchUpdatesTo(this)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BibleViewHolder =
