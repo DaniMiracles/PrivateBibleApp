@@ -1,24 +1,44 @@
 package com.example.privatebibleapp.core
 
 import android.app.Application
-import com.example.privatebibleapp.BooksCommunication
-import com.example.privatebibleapp.BooksViewModel
-import com.example.privatebibleapp.IdCache
-import com.example.privatebibleapp.UiDataCache
-import com.example.privatebibleapp.dataBooks.BookRepository
-import com.example.privatebibleapp.dataBooks.BooksDataToDomainMapper
-import com.example.privatebibleapp.dataBooks.ToBookDataMapper
-import com.example.privatebibleapp.dataBooks.cache.BooksCacheDataSource
-import com.example.privatebibleapp.dataBooks.cloud.BooksCloudDataSource
-import com.example.privatebibleapp.dataBooks.cloud.BooksServices
-import com.example.privatebibleapp.dataBooks.CloudMapperToBooks
-import com.example.privatebibleapp.dataBooks.cache.BookDataToDbMapper
-import com.example.privatebibleapp.dataBooks.cache.CacheMapperToBooks
-import com.example.privatebibleapp.dataBooks.cache.CacheModule
-import com.example.privatebibleapp.domainBooks.BookDataToDomainMapper
-import com.example.privatebibleapp.domainBooks.BooksInteractor
-import com.example.privatebibleapp.presenterBooks.BookDomainToUiMapper
-import com.example.privatebibleapp.presenterBooks.BooksDomainToUiMapper
+import com.example.privatebibleapp.presenter.books.BookCache
+import com.example.privatebibleapp.presenter.books.BooksCommunication
+import com.example.privatebibleapp.presenter.books.BooksViewModel
+import com.example.privatebibleapp.presenter.IdCache
+import com.example.privatebibleapp.presenter.MainViewModel
+import com.example.privatebibleapp.presenter.NavigationCommunication
+import com.example.privatebibleapp.presenter.books.UiDataCache
+import com.example.privatebibleapp.data.ChapterIdToUiMapper
+import com.example.privatebibleapp.data.books.BookRepository
+import com.example.privatebibleapp.data.books.BooksDataToDomainMapper
+import com.example.privatebibleapp.data.books.ToBookDataMapper
+import com.example.privatebibleapp.data.books.cache.BooksCacheDataSource
+import com.example.privatebibleapp.data.books.cloud.BooksCloudDataSource
+import com.example.privatebibleapp.data.books.cloud.BooksServices
+import com.example.privatebibleapp.data.books.cloud.CloudMapperToBooks
+import com.example.privatebibleapp.data.books.cache.BookDataToDbMapper
+import com.example.privatebibleapp.data.books.cache.CacheMapperToBooks
+import com.example.privatebibleapp.data.books.cache.CacheModule
+import com.example.privatebibleapp.data.chapters.ChapterDataToDomainMapper
+import com.example.privatebibleapp.data.chapters.ChaptersDataToDomainMapper
+import com.example.privatebibleapp.data.chapters.ChaptersRepository
+import com.example.privatebibleapp.data.chapters.ToChapterDataMapper
+import com.example.privatebibleapp.data.chapters.cloud.ChaptersCloudDataSource
+import com.example.privatebibleapp.data.chapters.cloud.ChaptersService
+import com.example.privatebibleapp.data.chapters.cloud.CloudMapperToChapters
+import com.example.privatebibleapp.data.books.BookDataToDomainMapper
+import com.example.privatebibleapp.data.chapters.cache.CacheMapperToChapters
+import com.example.privatebibleapp.data.chapters.cache.ChapterDataToDbMapper
+import com.example.privatebibleapp.data.chapters.cache.ChaptersCacheDataSource
+import com.example.privatebibleapp.domain.books.BooksInteractor
+import com.example.privatebibleapp.domain.chapters.ChapterDomainToUiMapper
+import com.example.privatebibleapp.domain.chapters.ChaptersDomainToUiMapper
+import com.example.privatebibleapp.domain.chapters.ChaptersInteractor
+import com.example.privatebibleapp.domain.books.BookDomainToUiMapper
+import com.example.privatebibleapp.domain.books.BooksDomainToUiMapper
+import com.example.privatebibleapp.presenter.chapters.ChaptersCommunication
+import com.example.privatebibleapp.presenter.chapters.ChaptersViewModel
+import com.example.privatebibleapp.presenter.Navigator
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -27,7 +47,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class BibleApp : Application() {
 
+    lateinit var mainViewModel: MainViewModel
     lateinit var booksViewModel: BooksViewModel
+    lateinit var chaptersViewModel: ChaptersViewModel
 
     private companion object {
         const val BASE_URL = "https://bible-go-api.rkeplin.com/v1/"
@@ -57,7 +79,7 @@ class BibleApp : Application() {
         val booksDao = dataBase.booksDao()
         val booksCloudDataSource = BooksCloudDataSource.Base(bookService, gson)
         val cloudMapperToBooks = CloudMapperToBooks.Base(toBookDataMapper)
-        val booksCacheDataSource = BooksCacheDataSource.Base(booksDao,BookDataToDbMapper.Base())
+        val booksCacheDataSource = BooksCacheDataSource.Base(booksDao, BookDataToDbMapper.Base())
         val cacheMapperToBooks = CacheMapperToBooks.Base(toBookDataMapper)
 
 
@@ -74,13 +96,62 @@ class BibleApp : Application() {
         val manageResources = ManageResources.Base(this)
         val booksCommunication = BooksCommunication.Base()
 
-        booksViewModel = BooksViewModel(
-            booksInteractor,
-            BooksDomainToUiMapper.Base(manageResources, BookDomainToUiMapper.Base(manageResources)),
-            booksCommunication,
-            UiDataCache.Base(IdCache.Base(this))
+        val bookCache = BookCache.Base(this)
+
+        val chapterService = retrofit.create(ChaptersService::class.java)
+        val chaptersCloudDataSource = ChaptersCloudDataSource.Base(gson, chapterService)
+        val toChapterDataMapper = ToChapterDataMapper.Base()
+        val cloudMapperToChapters = CloudMapperToChapters.Base(toChapterDataMapper)
+        val chapterDataToDomainMapper = ChapterDataToDomainMapper.Base()
+        val chaptersDataToDomainMapper = ChaptersDataToDomainMapper.Base(chapterDataToDomainMapper)
+
+        val bookDomainToUiMapper = BookDomainToUiMapper.Base(manageResources)
+        val booksDomainToUiMapper =
+            BooksDomainToUiMapper.Base(manageResources, bookDomainToUiMapper)
+
+        val idCacheBase = IdCache.Base(this)
+        val uiDataCache = UiDataCache.Base(idCacheBase)
+
+        val chaptersCommunication = ChaptersCommunication.Base()
+        val chapterDomainToUiMapper = ChapterDomainToUiMapper.Base(manageResources)
+        val chaptersDomainToUiMapper =
+            ChaptersDomainToUiMapper.Base(manageResources, chapterDomainToUiMapper)
+
+        val chaptersDao = dataBase.chaptersDao()
+        val chapterDataToDbMapper = ChapterDataToDbMapper.Base()
+        val chapterCacheDataSource =
+            ChaptersCacheDataSource.Base(chaptersDao, chapterDataToDbMapper)
+
+        val cacheMapperToChapters = CacheMapperToChapters.Base(toChapterDataMapper)
+
+        val chaptersRepository = ChaptersRepository.Base(
+            chaptersCloudDataSource,
+            cloudMapperToChapters,
+            chapterCacheDataSource,
+            cacheMapperToChapters,
+            bookCache
         )
 
+        val chaptersInteractor =
+            ChaptersInteractor.Base(chaptersRepository, chaptersDataToDomainMapper)
 
+        val navigator = Navigator.Base(this)
+        val navigationCommunication = NavigationCommunication.Base()
+        mainViewModel = MainViewModel(navigationCommunication, navigator)
+
+        booksViewModel = BooksViewModel(
+            booksInteractor,
+            booksDomainToUiMapper,
+            booksCommunication,
+            uiDataCache,
+            bookCache, navigator, navigationCommunication
+        )
+
+        chaptersViewModel = ChaptersViewModel(
+            chaptersInteractor,
+            chaptersCommunication,
+            chaptersDomainToUiMapper, navigator,
+            bookCache
+        )
     }
 }
