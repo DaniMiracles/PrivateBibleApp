@@ -13,6 +13,8 @@ abstract class BaseFragment : Fragment() {
 
     protected var recyclerView: RecyclerView? = null
 
+    protected abstract fun getTitle() : String
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -23,7 +25,7 @@ abstract class BaseFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        requireActivity().title = getTitle()
         recyclerView = view.findViewById(R.id.commonRecyclerView)
         recyclerView?.addItemDecoration(
             DividerItemDecoration(requireContext(), RecyclerView.VERTICAL)

@@ -3,6 +3,7 @@ package com.example.privatebibleapp.presenter.books
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
+import com.example.privatebibleapp.R
 import com.example.privatebibleapp.presenter.BaseFragment
 import com.example.privatebibleapp.presenter.CollapseListener
 import com.example.privatebibleapp.core.BibleApp
@@ -16,6 +17,8 @@ class BooksFragment : BaseFragment() {
         super.onCreate(savedInstanceState)
         booksViewModel = (requireActivity().application as BibleApp).booksViewModel
     }
+
+    override fun getTitle(): String = getString(R.string.app_name)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

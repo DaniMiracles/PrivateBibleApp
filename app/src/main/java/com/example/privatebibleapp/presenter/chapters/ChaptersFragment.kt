@@ -16,6 +16,8 @@ class ChaptersFragment : BaseFragment() {
         chaptersViewModel = (requireActivity().application as BibleApp).chaptersViewModel
     }
 
+    override fun getTitle(): String = chaptersViewModel.getBookName()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
