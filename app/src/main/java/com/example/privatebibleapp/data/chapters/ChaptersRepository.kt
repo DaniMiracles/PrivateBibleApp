@@ -34,6 +34,5 @@ interface ChaptersRepository {
         } catch (e: Exception) {
             ChaptersData.Fail(e)
         }
-
     }
 }

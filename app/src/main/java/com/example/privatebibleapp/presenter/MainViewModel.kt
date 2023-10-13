@@ -1,13 +1,13 @@
 package com.example.privatebibleapp.presenter
 
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
-import com.example.privatebibleapp.core.Read
 
 class MainViewModel(
     private val navigationCommunication: NavigationCommunication,
-    private val navigator: Read<Int>
+    private val navigator: MainNavigator<Fragment>
 ) : ViewModel() {
 
     fun init() {
@@ -26,5 +26,9 @@ class MainViewModel(
             navigationCommunication.map(newScreen)
         }
         return exit
+    }
+
+    fun getFragment(id:Int): Fragment {
+        return navigator.getFragment(id)
     }
 }

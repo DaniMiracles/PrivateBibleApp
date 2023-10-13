@@ -6,8 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.privatebibleapp.presenter.NavigationCommunication
 import com.example.privatebibleapp.core.Save
-import com.example.privatebibleapp.presenter.Screens.Companion.BOOKS_SCREEN
-import com.example.privatebibleapp.presenter.Screens.Companion.CHAPTERS_SCREEN
+
 import com.example.privatebibleapp.domain.books.BooksInteractor
 import com.example.privatebibleapp.domain.books.BooksDomainToUiMapper
 import kotlinx.coroutines.CoroutineDispatcher
@@ -21,7 +20,7 @@ class BooksViewModel(
     private val booksCommunication: BooksCommunication,
     private val uiDataCache: UiDataCache,
     private val bookCache: Save<Pair<Int, String>>,
-    private val navigator: Save<Int>,
+    private val navigator: BooksNavigator,
     private val navigationCommunication: NavigationCommunication
 ) : ViewModel() {
 
@@ -56,11 +55,11 @@ class BooksViewModel(
 
     fun showBook(id: Int, name: String) {
         bookCache.save(Pair(id, name))
-        navigationCommunication.map(CHAPTERS_SCREEN)
+        navigator.nextScreen(navigationCommunication)
     }
 
     fun init() {
-        navigator.save(BOOKS_SCREEN)
+        navigator.saveBooksScreen()
         fetchBooks()
     }
 }

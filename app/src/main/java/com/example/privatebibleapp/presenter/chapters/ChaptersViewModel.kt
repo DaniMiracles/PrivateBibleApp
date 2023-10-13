@@ -5,8 +5,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.privatebibleapp.core.Read
-import com.example.privatebibleapp.core.Save
-import com.example.privatebibleapp.presenter.Screens.Companion.CHAPTERS_SCREEN
 import com.example.privatebibleapp.domain.chapters.ChaptersInteractor
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -18,7 +16,7 @@ class ChaptersViewModel(
     private val chaptersInteractor: ChaptersInteractor,
     private val chaptersCommunication: ChaptersCommunication,
     private val chaptersDomainToUiMapper: ChaptersDomainToUiMapper,
-    private val navigator: Save<Int>,
+    private val navigator: ChaptersNavigator,
     private val bookCache: Read<Pair<Int, String>>
 ) : ViewModel() {
     private val dispatcherIO: CoroutineDispatcher = Dispatchers.IO
@@ -44,7 +42,7 @@ class ChaptersViewModel(
     }
 
     fun init() {
-        navigator.save(CHAPTERS_SCREEN)
+        navigator.saveChaptersScreen()
         fetchChapters()
     }
 
