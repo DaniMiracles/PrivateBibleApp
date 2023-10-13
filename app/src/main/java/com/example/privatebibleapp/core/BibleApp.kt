@@ -100,8 +100,8 @@ class BibleApp : Application() {
 
         val chapterService = retrofit.create(ChaptersService::class.java)
         val chaptersCloudDataSource = ChaptersCloudDataSource.Base(gson, chapterService)
-        val toChapterDataMapper = ToChapterDataMapper.Base()
-        val cloudMapperToChapters = CloudMapperToChapters.Base(toChapterDataMapper)
+        val toChapterDataMapperCloud = ToChapterDataMapper.Cloud(bookCache)
+        val cloudMapperToChapters = CloudMapperToChapters.Base(toChapterDataMapperCloud)
         val chapterDataToDomainMapper = ChapterDataToDomainMapper.Base()
         val chaptersDataToDomainMapper = ChaptersDataToDomainMapper.Base(chapterDataToDomainMapper)
 
@@ -112,8 +112,10 @@ class BibleApp : Application() {
         val idCacheBase = IdCache.Base(this)
         val uiDataCache = UiDataCache.Base(idCacheBase)
 
+        val chapterIdToUiMapper = ChapterIdToUiMapper.Base(manageResources)
+
         val chaptersCommunication = ChaptersCommunication.Base()
-        val chapterDomainToUiMapper = ChapterDomainToUiMapper.Base(manageResources)
+        val chapterDomainToUiMapper = ChapterDomainToUiMapper.Base(chapterIdToUiMapper)
         val chaptersDomainToUiMapper =
             ChaptersDomainToUiMapper.Base(manageResources, chapterDomainToUiMapper)
 
@@ -122,7 +124,9 @@ class BibleApp : Application() {
         val chapterCacheDataSource =
             ChaptersCacheDataSource.Base(chaptersDao, chapterDataToDbMapper)
 
-        val cacheMapperToChapters = CacheMapperToChapters.Base(toChapterDataMapper)
+
+        val toChapterDataMapperCache = ToChapterDataMapper.Cache(bookCache)
+        val cacheMapperToChapters = CacheMapperToChapters.Base(toChapterDataMapperCache)
 
         val chaptersRepository = ChaptersRepository.Base(
             chaptersCloudDataSource,

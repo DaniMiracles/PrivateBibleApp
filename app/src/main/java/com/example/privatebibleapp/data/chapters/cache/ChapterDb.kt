@@ -26,10 +26,11 @@ import com.example.privatebibleapp.data.chapters.ToChapterDataMapper
     indices = [Index("book_id")]
 )
 data class ChapterDb(
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     @ColumnInfo(name = "chapterId")
     val chapterId: Int,
-    @ColumnInfo(name = "book_id") val bookId: Int
+    @ColumnInfo(name = "book_id")
+    val bookId: Int
 ) : Abstract.Object<ChapterData, ToChapterDataMapper> {
     override fun map(mapper: ToChapterDataMapper): ChapterData = mapper.map(chapterId)
 }

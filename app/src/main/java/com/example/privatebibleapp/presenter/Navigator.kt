@@ -12,10 +12,11 @@ interface Navigator : Read<Int>, Save<Int> {
         private val sharedPreferences =
             context.getSharedPreferences(NAVIGATOR_FILE_NAME, Context.MODE_PRIVATE)
 
-        override fun read(): Int = sharedPreferences.getInt(CURRENT_SCREEN_KEY, 0)
-
+        override fun read(): Int =
+            sharedPreferences.getInt(CURRENT_SCREEN_KEY,0)
+        
         override fun save(data: Int) {
-            sharedPreferences.edit().putInt(CURRENT_SCREEN_KEY, data)
+            sharedPreferences.edit().putInt(CURRENT_SCREEN_KEY, data).apply()
         }
 
         private companion object {

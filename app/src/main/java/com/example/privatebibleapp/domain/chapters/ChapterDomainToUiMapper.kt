@@ -1,18 +1,18 @@
 package com.example.privatebibleapp.domain.chapters
 
-import com.example.privatebibleapp.R
 import com.example.privatebibleapp.core.Abstract
-import com.example.privatebibleapp.core.ManageResources
+import com.example.privatebibleapp.data.ChapterId
+import com.example.privatebibleapp.data.ChapterIdToUiMapper
 import com.example.privatebibleapp.presenter.chapters.ChapterUi
 
 interface ChapterDomainToUiMapper : Abstract.Mapper {
 
-    fun map(data: Int): ChapterUi
+    fun map(data: ChapterId): ChapterUi
 
     class Base(
-        private val manageResources: ManageResources
+        private val chapterIdToUiMapper: ChapterIdToUiMapper
     ) : ChapterDomainToUiMapper {
-        override fun map(data: Int): ChapterUi =
-            ChapterUi.Base(data, manageResources.getString(R.string.chapter_number,data))
+        override fun map(data: ChapterId): ChapterUi =
+            data.map(chapterIdToUiMapper)
     }
 }

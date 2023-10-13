@@ -1,13 +1,14 @@
 package com.example.privatebibleapp.data
 
 import com.example.privatebibleapp.core.Abstract
+import com.example.privatebibleapp.data.chapters.cache.ChapterDb
 import com.example.privatebibleapp.presenter.chapters.ChapterUi
 
 interface ChapterId : Abstract.Object<ChapterUi, ChapterIdToUiMapper> {
     fun min(): Int
     fun max(): Int
 
-    //   fun mapToDb(): ChapterDb
+      fun mapToDb(bookId: Int): ChapterDb
 
     class Base : ChapterId {
 
@@ -33,7 +34,9 @@ interface ChapterId : Abstract.Object<ChapterUi, ChapterIdToUiMapper> {
         override fun min() = MULTIPLY * bookId
         override fun max() = MULTIPLY * (bookId + 1)
 
-        //    override fun mapToDb(db: DbWrapper<ChapterDb>) = db.createObject(chapterIdGenerated)
+        override fun mapToDb(bookId: Int): ChapterDb = ChapterDb(chapterIdGenerated,bookId)
+
+
         override fun map(mapper: ChapterIdToUiMapper): ChapterUi =
             mapper.map(chapterIdGenerated, chapterIdReal)
 
