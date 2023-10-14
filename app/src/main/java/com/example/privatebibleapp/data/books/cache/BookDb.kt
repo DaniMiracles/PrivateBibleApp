@@ -16,9 +16,9 @@ import com.example.privatebibleapp.data.books.ToBookDataMapper
 data class BookDb(
     @PrimaryKey
     @ColumnInfo(name = "id")
-    val bookId: Int,
-    @ColumnInfo(name = "name") val name: String,
-    @ColumnInfo(name = "testament") val testament: String
+    var bookId: Int,
+    @ColumnInfo(name = "name") var name: String,
+    @ColumnInfo(name = "testament") var testament: String
 ) : Abstract.Object<BookData, ToBookDataMapper> {
     override fun map(mapper: ToBookDataMapper): BookData = mapper.map(bookId, name, testament)
 

@@ -8,7 +8,7 @@ import com.example.privatebibleapp.presenter.IdCache
 import com.example.privatebibleapp.presenter.MainViewModel
 import com.example.privatebibleapp.presenter.NavigationCommunication
 import com.example.privatebibleapp.presenter.books.UiDataCache
-import com.example.privatebibleapp.data.ChapterIdToUiMapper
+import com.example.privatebibleapp.data.chapters.ChapterIdToUiMapper
 import com.example.privatebibleapp.data.books.BookRepository
 import com.example.privatebibleapp.data.books.BooksDataToDomainMapper
 import com.example.privatebibleapp.data.books.ToBookDataMapper
