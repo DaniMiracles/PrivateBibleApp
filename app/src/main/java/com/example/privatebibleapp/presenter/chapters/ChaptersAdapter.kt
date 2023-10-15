@@ -8,7 +8,10 @@ import com.example.privatebibleapp.core.BaseViewHolder
 import com.example.privatebibleapp.core.CustomTextView
 import com.example.privatebibleapp.core.Retry
 
-class ChaptersAdapter(private val retry: Retry) :
+class ChaptersAdapter(
+    private val retry: Retry,
+    private val clickListener: ChapterClickListener
+) :
     BaseAdapter<ChapterUi, BaseViewHolder<ChapterUi>>() {
 
     override fun getItemViewType(position: Int): Int = when (list[position]) {
@@ -19,17 +22,29 @@ class ChaptersAdapter(private val retry: Retry) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<ChapterUi> =
         when (viewType) {
-            0 -> ChaptersViewHolder.Base(R.layout.text_layout.makeView(parent))
+            0 -> ChaptersViewHolder.Base(R.layout.text_layout.makeView(parent),clickListener)
             1 -> BaseViewHolder.Fail(R.layout.books_require_error.makeView(parent), retry)
             else -> BaseViewHolder.FullscreenProgress(R.layout.progress.makeView(parent))
         }
 
     abstract class ChaptersViewHolder(view: View) : BaseViewHolder<ChapterUi>(view) {
 
-        class Base(view: View) : ChaptersViewHolder(view) {
-            private val textView : CustomTextView = view.findViewById(R.id.textView)
-            override fun bind(item: ChapterUi) = item.map(textView)
+        class Base(
+            view: View,
+            private val clickListener: ChapterClickListener
+        ) : ChaptersViewHolder(view) {
+            private val textView: CustomTextView = view.findViewById(R.id.textView)
+            override fun bind(item: ChapterUi) {
+                item.map(textView)
+                itemView.setOnClickListener {
+                    clickListener.show(item)
+                }
+            }
         }
+    }
+
+    interface ChapterClickListener {
+        fun show(item: ChapterUi)
     }
 
 }

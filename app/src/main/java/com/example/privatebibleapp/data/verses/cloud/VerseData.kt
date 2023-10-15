@@ -10,11 +10,10 @@ class VerseData(
     private val id: Int,
     private val verseId: Int,
     private val text: String
-) : Abstract.Object<VerseDomain, VerseDataToDomainMapper>,
-    Abstract.Database<VerseDb, VerseDataToDbMapper> {
+) : Abstract.Object<VerseDomain, VerseDataToDomainMapper> {
 
     override fun map(mapper: VerseDataToDomainMapper): VerseDomain = mapper.map(verseId, text)
 
-    override fun mapToDb(mapper: VerseDataToDbMapper): VerseDb =
-        mapper.mapToDb(id, verseId, text)
+    fun mapToDb(mapper: VerseDataToDbMapper,chapterId:Int): VerseDb =
+        mapper.mapToDb(id, verseId, text,chapterId)
 }
