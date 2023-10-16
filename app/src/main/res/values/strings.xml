@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">PrivateBibleApp</string>
+    <string name="no_connection">No Connection</string>
+    <string name="service_unavailable">Service Unavailable</string>
+    <string name="something_wrong">Something Wrong</string>
+    <string name="name_book">name_book</string>
+    <string name="error">error</string>
+    <string name="retry_again">retry again</string>
+    <string name="new_testament">New Testament</string>
+    <string name="old_testament">Old Testament</string>
+    <string name="chapter_number">Chapter %d</string>
 </resources>
