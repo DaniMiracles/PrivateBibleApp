@@ -1,6 +1,8 @@
-package com.example.privatebibleapp.core
+package com.example.privatebibleapp.sl.core
 
 import android.content.Context
+import com.example.privatebibleapp.core.ManageResources
+import com.example.privatebibleapp.data.books.cache.CacheModule
 import com.example.privatebibleapp.presenter.MainViewModel
 import com.example.privatebibleapp.presenter.NavigationCommunication
 import com.example.privatebibleapp.presenter.Navigator
@@ -24,10 +26,13 @@ class CoreModule : BaseModule<MainViewModel> {
     lateinit var navigationCommunication: NavigationCommunication
     lateinit var bookCache: BookCache
     lateinit var chapterCache: ChapterCache
+    private lateinit var dataBase: CacheModule
+    lateinit var contextCore: Context
     private lateinit var retrofit: Retrofit
 
 
     fun init(context: Context) {
+        dataBase = CacheModule.Base(context)
 
         val client = OkHttpClient.Builder()
             .addInterceptor(HttpLoggingInterceptor().apply {
@@ -35,7 +40,7 @@ class CoreModule : BaseModule<MainViewModel> {
             })
             .build()
 
-        val retrofit = Retrofit.Builder()
+        retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
@@ -47,13 +52,17 @@ class CoreModule : BaseModule<MainViewModel> {
         navigationCommunication = NavigationCommunication.Base()
         bookCache = BookCache.Base(context)
         chapterCache = ChapterCache.Base(context)
+        contextCore = context
 
     }
 
-    fun <T> makeService(clazz: Class<T>) = retrofit.create(clazz)
+    fun <T> makeService(clazz: Class<T>): T =
+        retrofit.create(clazz)
 
-    override fun getViewModel(): MainViewModel = MainViewModel(navigationCommunication, navigator)
+    fun getDao() = dataBase.provideDatabase()
 
+    override fun getViewModel(): MainViewModel =
+        MainViewModel(navigationCommunication, navigator)
 
 
 }

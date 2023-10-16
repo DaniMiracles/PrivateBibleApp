@@ -2,6 +2,7 @@ package com.example.privatebibleapp.presenter.verses
 
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.example.privatebibleapp.core.BibleApp
 import com.example.privatebibleapp.core.Retry
@@ -9,12 +10,12 @@ import com.example.privatebibleapp.presenter.BaseFragment
 
 class VersesFragment : BaseFragment() {
 
-    private lateinit var versesViewModel: VersesViewModel
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        versesViewModel = (requireActivity().application as BibleApp).versesViewModel
+    private val versesViewModelFactory by lazy {
+        (requireActivity().application as BibleApp).versesFactory()
     }
+
+    private val versesViewModel by viewModels<VersesViewModel> { versesViewModelFactory }
+
 
     override fun getTitle(): String = versesViewModel.getTitle()
 

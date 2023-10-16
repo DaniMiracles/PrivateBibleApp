@@ -1,4 +1,4 @@
-package com.example.privatebibleapp.core
+package com.example.privatebibleapp.sl.core
 
 import androidx.lifecycle.ViewModel
 
