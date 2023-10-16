@@ -1,4 +1,4 @@
-package com.example.privatebibleapp.data
+package com.example.privatebibleapp.data.chapters
 
 import com.example.privatebibleapp.core.Abstract
 import com.example.privatebibleapp.data.chapters.cache.ChapterDb

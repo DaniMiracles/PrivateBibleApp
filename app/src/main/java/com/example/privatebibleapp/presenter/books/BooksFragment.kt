@@ -2,6 +2,7 @@ package com.example.privatebibleapp.presenter.books
 
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import com.example.privatebibleapp.R
 import com.example.privatebibleapp.presenter.BaseFragment
@@ -11,12 +12,11 @@ import com.example.privatebibleapp.core.Retry
 
 class BooksFragment : BaseFragment() {
 
-    private lateinit var booksViewModel: BooksViewModel
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        booksViewModel = (requireActivity().application as BibleApp).booksViewModel
+    private val booksViewModelFactory by lazy {
+        (requireActivity().application as BibleApp).booksFactory()
     }
+
+    private val booksViewModel by activityViewModels<BooksViewModel> {booksViewModelFactory}
 
     override fun getTitle(): String = getString(R.string.app_name)
 

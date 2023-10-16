@@ -1,14 +1,14 @@
 package com.example.privatebibleapp.data.chapters.cache
 
 import com.example.privatebibleapp.core.Abstract
-import com.example.privatebibleapp.data.ChapterId
+import com.example.privatebibleapp.data.chapters.ChapterId
 
 interface ChapterDataToDbMapper : Abstract.Mapper {
 
-    fun mapToDb(chapterId: ChapterId,bookId: Int): ChapterDb
+    fun mapToDb(chapterId: ChapterId, bookId: Int): ChapterDb
 
     class Base() : ChapterDataToDbMapper {
-        override fun mapToDb(chapterId: ChapterId,bookId : Int): ChapterDb = chapterId.mapToDb(bookId)
+        override fun mapToDb(chapterId: ChapterId, bookId : Int): ChapterDb = chapterId.mapToDb(bookId)
 
     }
 }

@@ -8,10 +8,12 @@ import com.example.privatebibleapp.core.Read
 import com.example.privatebibleapp.core.Save
 import com.example.privatebibleapp.presenter.books.BooksFragment
 import com.example.privatebibleapp.presenter.chapters.ChaptersFragment
+import com.example.privatebibleapp.presenter.verses.VersesFragment
+import com.example.privatebibleapp.presenter.verses.VersesNavigator
 
 
 interface Navigator : Read<Int>, Save<Int>, MainNavigator<Fragment>, BooksNavigator,
-    ChaptersNavigator {
+    ChaptersNavigator,VersesNavigator {
 
     class Base(context: Context) : Navigator {
 
@@ -25,22 +27,22 @@ interface Navigator : Read<Int>, Save<Int>, MainNavigator<Fragment>, BooksNaviga
             sharedPreferences.edit().putInt(CURRENT_SCREEN_KEY, data).apply()
         }
 
-        override fun saveBooksScreen() {
-            save(BOOKS_SCREEN)
-        }
+        override fun saveBooksScreen() = save(BOOKS_SCREEN)
+        override fun saveChaptersScreen() = save(CHAPTERS_SCREEN)
+        override fun saveVersesScreen() = save(VERSES_SCREEN)
 
         override fun nextScreen(communication: NavigationCommunication) {
             communication.map(read() + 1)
         }
 
-        override fun saveChaptersScreen() {
-            save(CHAPTERS_SCREEN)
-        }
+
+
 
         override fun getFragment(id:Int): Fragment {
             val fragment = when (id) {
                 BOOKS_SCREEN -> BooksFragment()
                 CHAPTERS_SCREEN -> ChaptersFragment()
+                VERSES_SCREEN -> VersesFragment()
                 else -> {
                     throw IllegalStateException("screen id undefined $id")
                 }
@@ -54,6 +56,7 @@ interface Navigator : Read<Int>, Save<Int>, MainNavigator<Fragment>, BooksNaviga
 
             const val BOOKS_SCREEN = 0
             const val CHAPTERS_SCREEN = 1
+            const val VERSES_SCREEN = 2
         }
 
     }

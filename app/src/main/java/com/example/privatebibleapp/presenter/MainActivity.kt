@@ -15,7 +15,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        mainViewModel = (application as BibleApp).mainViewModel
+        mainViewModel = (application as BibleApp).getMainViewModel()
 
         mainViewModel.observe(this, Observer { typeScreen ->
             val fragment = mainViewModel.getFragment(typeScreen)

@@ -1,7 +1,6 @@
 package com.example.privatebibleapp.data.chapters
 
 import com.example.privatebibleapp.core.Abstract
-import com.example.privatebibleapp.data.ChapterId
 import com.example.privatebibleapp.data.chapters.cache.ChapterDataToDbMapper
 import com.example.privatebibleapp.data.chapters.cache.ChapterDb
 import com.example.privatebibleapp.domain.chapters.ChapterDomain

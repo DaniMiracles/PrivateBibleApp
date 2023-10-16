@@ -2,7 +2,6 @@ package com.example.privatebibleapp.data.chapters
 
 import com.example.privatebibleapp.core.Abstract
 import com.example.privatebibleapp.core.Read
-import com.example.privatebibleapp.data.ChapterId
 
 interface ToChapterDataMapper : Abstract.Mapper.Data<Int, ChapterData> {
 
