@@ -28,7 +28,7 @@ data class BookDb(
 @Dao
 interface BooksDao {
     @Query("SELECT * FROM bible_table ORDER BY id ASC")
-    fun fetchAllBooks(): List<BookDb>
+     fun fetchAllBooks(): List<BookDb>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAllBooks(list: List<BookDb>)
